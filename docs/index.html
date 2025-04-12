@@ -7,7 +7,7 @@
   <meta name="description" content="Theoretical documentation for the Disco Reward Model (DiscoRM) project.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
-  <!-- KaTeX CSS -->
+  <!-- 数学公式渲染样式 -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"/>
 </head>
 <body>
@@ -20,20 +20,58 @@
       subMaxLevel: 2,
       // Set the homepage (optional, defaults to README.md)
       homepage: 'README_CORE_IDEAS.md',
-      // KaTeX options
-      katex: {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ]
+      markdown: {
+        renderer: {
+          code: function(code, lang) {
+            if (lang === "math") {
+              return (
+                '<span class="tex">' +
+                katex.renderToString(code, {
+                  throwOnError: false
+                }) +
+                '</span>'
+              );
+            }
+            return this.origin.code.apply(this, arguments);
+          }
+        }
       }
     }
   </script>
   <!-- Docsify v4 -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
-  <!-- docsify-katex plugin -->
+  <script src="//cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/marked@4"></script>
+  
+  <!-- docsify数学公式插件 -->
   <script src="//cdn.jsdelivr.net/npm/docsify-katex@latest/dist/docsify-katex.js"></script>
+  
+  <!-- 支持行内LaTeX - 已注释掉用于实验 -->
+  <!--
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 为支持行内LaTeX，找到所有$符号包围的内容并替换
+      const elements = document.querySelectorAll('p, li, td, th, h1, h2, h3, h4, h5, h6');
+      elements.forEach(el => {
+        let html = el.innerHTML;
+        // 匹配行内LaTeX：$...$
+        html = html.replace(/\$([^\$]+)\$/g, function(match, p1) {
+          return katex.renderToString(p1, {
+            throwOnError: false,
+            displayMode: false
+          });
+        });
+        // 匹配块级LaTeX：$$...$$
+        html = html.replace(/\$\$([^\$]+)\$\$/g, function(match, p1) {
+          return katex.renderToString(p1, {
+            throwOnError: false,
+            displayMode: true
+          });
+        });
+        el.innerHTML = html;
+      });
+    });
+  </script>
+  -->
 </body>
 </html> 
