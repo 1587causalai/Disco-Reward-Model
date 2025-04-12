@@ -1,32 +1,60 @@
 # Disco-Reward-Model
 
-基于 Disco Loss 的奖励模型训练框架，用于增强大型语言模型的 RLHF 流程。
+本项目旨在研究、实现和评估一种新颖的奖励模型训练方法——**Disco Reward Model (DiscoRM)**，通过将奖励建模为概率分布（包含均值和方差），以期更准确地捕捉人类偏好的复杂性与不确定性，从而改进大型语言模型（LLM）的对齐过程（如 RLHF）。
 
-## 项目结构
+## 项目核心概念（摘要）
 
-- **DiscoRM-LLaMA-Factory/**: 核心代码库，基于 LLaMA-Factory 框架的修改版本
-  - `docs/`: 详细的设计文档和实现细节
-    - `DiscoRM_Loss_and_Trainer_Design.md`: Disco Loss 和训练器设计
-    - `reward_model_training_overview.md`: 奖励模型训练概述
-    - `discorm_base_model_design.md`: DiscoRM 基础模型设计
+DiscoRM 的核心思想是将奖励视为**随机变量**，而非传统 RLHF 中的确定性标量。这主要基于以下考虑：
 
-- **Disco-Reward-Model-Latex/**: 项目论文和学术报告的 LaTeX 文件
+1.  **人类偏好的异质性与不确定性**: 不同人对同一反馈可能有不同评价，单一标量难以表达这种分歧。
+2.  **奖励信号的内在模糊性**: 某些任务的评价标准本身就存在模糊地带。
+3.  **理论启发 (阿罗不可能定理)**: 群体决策中可能出现非传递性偏好，随机性建模提供了更灵活的表达框架。
 
-- **Brainstorm/**: 项目构思和探索阶段的想法记录
+通过预测奖励的**均值 (μ)** 和**方差 (σ²)**，DiscoRM 理论上能够：
 
-- **background_knowledge/**: 相关研究论文和背景资料
+*   更准确地**表达模型对预测的不确定性**。
+*   在优化过程中**对高不确定性区域更鲁棒**，可能缓解奖励误定义和操纵问题。
+*   提供**更丰富的信号**用于改进偏好优化算法 (如 Disco-DPO)。
 
-- **README_CORE_IDEAS.md**: DiscoRM 方法的核心理念和创新点
+欲了解更深入的理论阐述和优势分析，请参考我们的 [**理论文档网站**](./docs/index.html)。
 
-- **THEORETICAL_EVALUATION.md**: DiscoRM 方法的理论分析和评估
+## 项目结构与入口
 
-## 主要特点
+本项目主要包含以下几个部分，各有侧重：
 
-- 创新的 Disco Loss 函数设计，提升奖励模型训练效果
-- 灵活的模型架构，支持将现有 LLM 转换为奖励模型
-- 与 LLaMA-Factory 框架的无缝集成
-- 完善的理论支撑和实验评估
+1.  **[理论文档 (Theory Docs)](./docs/index.html)** (位于 `./docs/`)
+    *   **目标受众**: 对 DiscoRM **核心思想、动机、数学模型、理论优势** 感兴趣的研究人员和广大读者。
+    *   **内容**: 详细阐述 DiscoRM 的理论基础。
+    *   **形式**: 基于 Docsify 的独立文档网站。
 
-## 使用方法
+2.  **[代码实现 (Code Implementation)](./DiscoRM-LLaMA-Factory/)** (位于 `./DiscoRM-LLaMA-Factory/`)
+    *   **目标受众**: 需要使用、修改或理解 DiscoRM **代码实现**的工程师和开发者。
+    *   **内容**: 基于 LLaMA Factory 修改的代码库，包含 DiscoRM 模型、损失函数和训练流程的实现。
+    *   **入口**: `DiscoRM-LLaMA-Factory/README.md` (包含原始 LLaMA Factory 说明和 DiscoRM 特定指引)。
 
-详细使用说明请参考 `DiscoRM-LLaMA-Factory/docs/` 目录下的文档。 
+3.  **[代码实现文档 (Code Docs)](./DiscoRM-LLaMA-Factory/docs/index.html)** (位于 `./DiscoRM-LLaMA-Factory/docs/`)
+    *   **目标受众**: 使用代码库的工程师和开发者。
+    *   **内容**: 聚焦于**代码层面的细节**：模型架构 (`NormalHead`)、损失函数实现、Trainer 适配、配置参数、运行指南等。
+    *   **形式**: 基于 Docsify 的独立文档网站。
+
+4.  **[论文 (LaTeX Source)](./Disco-Reward-Model-Latex/)** (位于 `./Disco-Reward-Model-Latex/`)
+    *   **目标受众**: 学术界读者。
+    *   **内容**: 项目的正式学术论文 LaTeX 源文件，包含最严谨的理论推导和实验结果。
+
+5.  **辅助材料** (位于 `./docs/`)
+    *   `./docs/Brainstorm/`: 项目构思和探索阶段的想法记录。
+    *   `./docs/background_knowledge/`: 相关研究论文和背景资料。
+
+## 主要特点总结
+
+*   创新的 DiscoRM 方法：将奖励建模为正态分布 (均值+方差)。
+*   潜在优势：更好地捕捉偏好复杂性，增强优化鲁棒性。
+*   基于 LLaMA Factory 实现，易于扩展和使用。
+*   提供独立的理论文档站和代码实现文档站。
+*   包含配套论文。
+
+## 如何开始？
+
+*   **了解理论**: 请访问 [理论文档网站](./docs/index.html)。
+*   **使用代码**: 请查阅 [代码库 (`DiscoRM-LLaMA-Factory/`)](./DiscoRM-LLaMA-Factory/) 及其 [代码实现文档](./DiscoRM-LLaMA-Factory/docs/index.html)。
+*   **阅读论文**: 请查看 [论文库 (`Disco-Reward-Model-Latex/`)](./Disco-Reward-Model-Latex/)。 
