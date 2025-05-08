@@ -46,32 +46,6 @@
   <!-- docsify数学公式插件 -->
   <script src="//cdn.jsdelivr.net/npm/docsify-katex@latest/dist/docsify-katex.js"></script>
   
-  <!-- 支持行内LaTeX - 已注释掉用于实验 -->
-  <!--
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // 为支持行内LaTeX，找到所有$符号包围的内容并替换
-      const elements = document.querySelectorAll('p, li, td, th, h1, h2, h3, h4, h5, h6');
-      elements.forEach(el => {
-        let html = el.innerHTML;
-        // 匹配行内LaTeX：$...$
-        html = html.replace(/\$([^\$]+)\$/g, function(match, p1) {
-          return katex.renderToString(p1, {
-            throwOnError: false,
-            displayMode: false
-          });
-        });
-        // 匹配块级LaTeX：$$...$$
-        html = html.replace(/\$\$([^\$]+)\$\$/g, function(match, p1) {
-          return katex.renderToString(p1, {
-            throwOnError: false,
-            displayMode: true
-          });
-        });
-        el.innerHTML = html;
-      });
-    });
-  </script>
-  -->
+
 </body>
 </html> 
